@@ -7,11 +7,13 @@ import io.ktor.routing.*
 import kotlinx.coroutines.*
 import kotlinx.html.*
 import java.util.*
+import java.util.concurrent.Executors
 import kotlin.system.*
 
 typealias DelayProvider = suspend (ms: Int) -> Unit
 
-val compute = newFixedThreadPoolContext(4, "compute")
+//val compute = newFixedThreadPoolContext(4, "compute")
+val compute = Executors.newFixedThreadPool(4).asCoroutineDispatcher()
 
 
 fun Application.async(random: Random = Random(), delayProvider: DelayProvider = { delay(it.toLong()) }) {
@@ -38,6 +40,7 @@ private suspend fun ApplicationCall.respondHandlingLongCalculation(random: Rando
         // But serves as an example of what to do if we want to perform slow non-asynchronous operations
         // that would block threads.
         withContext(compute) {
+//        withContext(Dispatchers.IO) {
             for (index in 0 until 300) {
                 delayProvider(10)
                 number += random.nextInt(100)
