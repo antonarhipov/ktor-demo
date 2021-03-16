@@ -15,7 +15,6 @@ fun Application.statusPages() {
             exception<AuthorizationException> { cause ->
                 call.respond(HttpStatusCode.Forbidden)
             }
-
         }
     }
 }

@@ -26,7 +26,7 @@ fun Application.json() {
     }
     routing {
         get("/customer") {
-            val model = Customer(id = 1, name = "Mary Jane", email = "mary@jane.com")
+            val model = Customer(id = 1, name = "Anton Arhipov", email = "anton@arhipov.xyz")
             call.respond(model)
         }
     }
