@@ -16,10 +16,12 @@ import kotlinx.html.br
 class Index(val message: String = "Hello from index!")
 
 @KtorExperimentalLocationsAPI
-@Location("/employee/{id}")
+
+@Location("/employee/{id}") //  employee/Anton?project=Kotlin
+//@Location("/employee/{id}/{project}") //  employee/Anton/Kotlin
 class Employee(
     val id: String,
-    val project: String,
+    val project: String = "",
 )
 
 @KtorExperimentalLocationsAPI
