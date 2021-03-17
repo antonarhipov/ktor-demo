@@ -22,9 +22,6 @@ fun Application.authentication() {
         }
     }
     routing {
-        get("/") {
-            call.respondText("You need credentials to access /secure")
-        }
         authenticate("auth") {
             get("/secure") {
                 call.respondText("Accessed secure area")
@@ -33,7 +30,7 @@ fun Application.authentication() {
     }
     //endregion
 
-    //region a slightly more complex basic scenario
+    //region a slightly more complex basic auth scenario
     authentication {
         basic(name = "myauth1") {
             realm = "Ktor Server"
