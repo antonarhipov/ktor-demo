@@ -10,6 +10,10 @@ import io.ktor.util.*
 import kotlinx.html.a
 import kotlinx.html.body
 import kotlinx.html.br
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.util.*
 
 @KtorExperimentalLocationsAPI
 @Location("/index")
@@ -22,6 +26,7 @@ class Index(val message: String = "Hello from index!")
 class Employee(
     val id: String,
     val project: String,
+    val dob: LocalDate
 )
 
 @KtorExperimentalLocationsAPI
@@ -32,16 +37,20 @@ class EmployeeList
 @KtorExperimentalLocationsAPI
 fun Application.locations() {
     install(Locations)
+
     install(DataConversion) {
-        convert<Employee> {
-            decode { values, _ ->
-                val list = values.first().split("-")
-                listOf(Employee(list[1], list[2]))
+        convert<LocalDate> { // this: DelegatingConversionService
+            val formatter = DateTimeFormatter.ofPattern("YYYY-MM-dd");
+
+            decode { values, _ -> // converter: (values: List<String>, type: Type) -> Any?
+                values.singleOrNull()?.let { LocalDate.parse(it) }
             }
-            encode { value: Any? ->
-                when(value) {
-                    is Employee -> listOf("${value.id}-${value.project}")
-                    else -> throw DataConversionException("Could not convert $value")
+
+            encode { value -> // converter: (value: Any?) -> List<String>
+                when (value) {
+                    null -> listOf()
+                    is LocalDate -> listOf(formatter.format(value))
+                    else -> throw DataConversionException("Cannot convert $value as Date")
                 }
             }
         }
@@ -52,7 +61,7 @@ fun Application.locations() {
             call.respondText("Locations demo: ${it.message}")
         }
         get<Employee> {
-            call.respondText("Employee: ${it.id}. Project: ${it.project}")
+            call.respondText("Employee: ${it.id}. Project: ${it.project}. DoB: ${it.dob}")
         }
         get<EmployeeList> {
             val employees = getEmployeesFromDB()
@@ -71,7 +80,7 @@ fun Application.locations() {
 
 @KtorExperimentalLocationsAPI
 fun getEmployeesFromDB(): List<Employee> = listOf(
-    Employee("Anton", "Kotlin"),
-    Employee("Hadi", "Wasabi"),
-    Employee("Leonid", "Ktor"),
+    Employee("Anton", "Kotlin", LocalDate.now()),
+    Employee("Hadi", "Wasabi", LocalDate.now()),
+    Employee("Leonid", "Ktor", LocalDate.now()),
 )
