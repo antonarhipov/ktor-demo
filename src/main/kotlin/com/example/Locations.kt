@@ -17,11 +17,11 @@ class Index(val message: String = "Hello from index!")
 
 @KtorExperimentalLocationsAPI
 
-@Location("/employee/{id}") //  employee/Anton?project=Kotlin
-//@Location("/employee/{id}/{project}") //  employee/Anton/Kotlin
+//@Location("/employee/{id}") //  employee/Anton?project=Kotlin
+@Location("/employee/{id}/{project}") //  employee/Anton/Kotlin
 class Employee(
     val id: String,
-    val project: String = "",
+    val project: String,
 )
 
 @KtorExperimentalLocationsAPI
@@ -32,12 +32,27 @@ class EmployeeList
 @KtorExperimentalLocationsAPI
 fun Application.locations() {
     install(Locations)
+    install(DataConversion) {
+        convert<Employee> {
+            decode { values, _ ->
+                val list = values.first().split("-")
+                listOf(Employee(list[1], list[2]))
+            }
+            encode { value: Any? ->
+                when(value) {
+                    is Employee -> listOf("${value.id}-${value.project}")
+                    else -> throw DataConversionException("Could not convert $value")
+                }
+            }
+        }
+    }
+
     routing {
         get<Index> {
             call.respondText("Locations demo: ${it.message}")
         }
         get<Employee> {
-            call.respondText("Employee: ${it.id}. Project: ${it.project}" )
+            call.respondText("Employee: ${it.id}. Project: ${it.project}")
         }
         get<EmployeeList> {
             val employees = getEmployeesFromDB()
