@@ -12,19 +12,17 @@ import kotlin.system.*
 
 typealias DelayProvider = suspend (ms: Int) -> Unit
 
-//val compute = newFixedThreadPoolContext(4, "compute")
 val compute = Executors.newFixedThreadPool(4).asCoroutineDispatcher()
 
-
 fun Application.async(random: Random = Random(), delayProvider: DelayProvider = { delay(it.toLong()) }) {
-    install(DefaultHeaders)
-    install(CallLogging)
+//    install(DefaultHeaders)
+//    install(CallLogging)
     routing {
         // Tabbed browsers can wait for first request to complete in one tab before making a request in another tab.
         // Presumably they assume second request will hit 304 Not Modified and save on data transfer.
         // If you want to verify simultaneous connections, either use "curl" or use different URLs in different tabs
         // Like localhost:8080/1, localhost:8080/2, localhost:8080/3, etc
-        get("/{...}") {
+        get("/async") {
             val startTime = System.currentTimeMillis()
             call.respondHandlingLongCalculation(random, delayProvider, startTime)
         }
@@ -40,7 +38,6 @@ private suspend fun ApplicationCall.respondHandlingLongCalculation(random: Rando
         // But serves as an example of what to do if we want to perform slow non-asynchronous operations
         // that would block threads.
         withContext(compute) {
-//        withContext(Dispatchers.IO) {
             for (index in 0 until 300) {
                 delayProvider(10)
                 number += random.nextInt(100)

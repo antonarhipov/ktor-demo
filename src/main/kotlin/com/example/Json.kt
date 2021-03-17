@@ -1,15 +1,14 @@
 package com.example
 
-import com.fasterxml.jackson.databind.SerializationFeature
 import io.ktor.application.*
 import io.ktor.features.*
 import io.ktor.gson.*
-import io.ktor.jackson.*
 import io.ktor.response.*
 import io.ktor.routing.*
 
 class Customer(val id: Int, val name: String, val email: String)
 
+// See https://ktor.io/docs/serialization.html
 fun Application.json() {
     install(ContentNegotiation) {
         gson {
@@ -17,6 +16,7 @@ fun Application.json() {
             serializeNulls()
         }
 
+        //Using kotlinx.serializarion
 //        json()
 
 //        jackson {

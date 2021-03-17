@@ -6,6 +6,7 @@ import io.ktor.http.*
 import io.ktor.response.*
 import io.ktor.routing.*
 
+//See https://ktor.io/docs/status-pages.html
 fun Application.statusPages() {
     routing {
         install(StatusPages) {

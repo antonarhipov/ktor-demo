@@ -6,6 +6,7 @@ import io.ktor.response.*
 import io.ktor.routing.*
 import io.ktor.util.*
 
+//See https://ktor.io/docs/authentication.html
 fun Application.authentication() {
     //region very basic example
     install(Authentication) {

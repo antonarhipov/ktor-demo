@@ -6,31 +6,33 @@ import io.ktor.routing.*
 
 fun Application.routingApp() {
     routing {
-        get("/") {
-            call.respondText("Routing Demo")
-        }
-        route("customer") {
+        route("routes") {
             get {
-                call.respondText(call.request.queryParameters["id"].toString())
+                call.respondText("Routing Demo")
             }
-            post {
-                call.respondText("Performed a POST")
-            }
-        }
-        route("employee") {
-            get("{id}") {
-                call.respondText(call.parameters["id"].toString())
-            }
-        }
-        route("shipment") {
-            route("international") {
+            route("customer") {
                 get {
-                    call.respondText("International Shipments")
+                    call.respondText(call.request.queryParameters["id"].toString())
+                }
+                post {
+                    call.respondText("Performed a POST")
                 }
             }
-            route("national") {
-                get {
-                    call.respondText("National Shipments")
+            route("employee") {
+                get("{id}") {
+                    call.respondText(call.parameters["id"].toString())
+                }
+            }
+            route("shipment") {
+                route("international") {
+                    get {
+                        call.respondText("International Shipments")
+                    }
+                }
+                route("national") {
+                    get {
+                        call.respondText("National Shipments")
+                    }
                 }
             }
         }

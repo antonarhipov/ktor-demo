@@ -50,7 +50,7 @@ fun Application.customFeature() {
         headerValue = "Def"
     }
     routing {
-        get("/") {
+        get("/customHeader") {
             call.respondText("Check out headers!")
         }
     }

@@ -9,6 +9,8 @@ import io.ktor.routing.*
 import kotlinx.css.*
 import kotlinx.html.*
 
+//See https://ktor.io/docs/html-dsl.html
+//See https://ktor.io/docs/css-dsl.html
 fun Application.html() {
     routing {
         get("/html-dsl") {

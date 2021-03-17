@@ -9,6 +9,10 @@ import io.ktor.webjars.*
 import io.ktor.websocket.*
 import java.time.Duration
 
+
+// See https://ktor.io/docs/webjars.html
+// See https://ktor.io/docs/websocket.html
+// See https://play.kotlinlang.org/hands-on/Creating%20a%20WebSocket%20Chat%20with%20Ktor/01_introduction
 fun Application.webapp(){
 
     //region Webjars

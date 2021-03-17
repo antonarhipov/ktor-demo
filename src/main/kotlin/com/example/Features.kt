@@ -9,17 +9,25 @@ import io.ktor.response.*
 import io.ktor.routing.*
 import org.slf4j.event.Level
 
-
 fun Application.features() {
-    install(DefaultHeaders)
+//    customFeature()
 
-    install(ConditionalHeaders)
+    install(ConditionalHeaders){
+        version { outgoingContent ->
+            when (outgoingContent.contentType?.withoutParameters()) {
+                ContentType.Text.CSS -> listOf(EntityTagVersion("123abc"))
+                else -> emptyList()
+            }
+        }
+    }
 
     install(AutoHeadResponse)
 
     install(DoubleReceive)
 
-    install(DataConversion)
+    install(DefaultHeaders) {
+        header("X-Engine", "Ktor") // will send this header with each response
+    }
 
     install(CallLogging) {
         level = Level.INFO
@@ -56,12 +64,6 @@ fun Application.features() {
         anyHost() // @TODO: Don't do this in production if possible. Try to limit it.
     }
 
-    install(DefaultHeaders) {
-        header("X-Engine", "Ktor") // will send this header with each response
-    }
-
-    customFeature()
-
     routing {
         get("/headers") {
             call.respondText("Check the headers", ContentType.Text.Plain)
@@ -72,7 +74,7 @@ fun Application.features() {
         post("/double-receive") {
             val first = call.receiveText()
             val theSame = call.receiveText()
-            call.respondText(first + " " + theSame)
+            call.respondText("$first $theSame")
         }
     }
 }

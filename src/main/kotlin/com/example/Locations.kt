@@ -16,6 +16,7 @@ class index()
 @Location("/employee/{id}")
 class employee(val id: String)
 
+// See https://ktor.io/docs/features-locations.html
 @KtorExperimentalLocationsAPI
 fun Application.locations() {
     install(Locations)

@@ -7,7 +7,7 @@ import io.ktor.routing.*
 import io.micrometer.prometheus.PrometheusConfig
 import io.micrometer.prometheus.PrometheusMeterRegistry
 
-
+//See https://ktor.io/docs/micrometer-metrics.html
 fun Application.health() {
     val appMicrometerRegistry = PrometheusMeterRegistry(PrometheusConfig.DEFAULT)
 

@@ -48,6 +48,7 @@ fun Application.post() {
                         when (part) {
                             is PartData.FormItem -> appendLine("Form field: $part = ${part.value}")
                             is PartData.FileItem -> appendLine("File field: $part -> ${part.originalFileName} of ${part.contentType}")
+                            is PartData.BinaryItem -> TODO()
                         }
                         part.dispose()
                     }
