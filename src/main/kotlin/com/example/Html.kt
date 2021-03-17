@@ -1,4 +1,3 @@
-
 package com.example
 
 import io.ktor.application.*
@@ -12,6 +11,17 @@ import kotlinx.html.*
 //See https://ktor.io/docs/html-dsl.html
 //See https://ktor.io/docs/css-dsl.html
 fun Application.html() {
+
+    routing {
+        get("/html") {
+            call.respond(
+                HttpStatusCode.OK,
+                Page().page1
+            )
+        }
+    }
+
+
     routing {
         get("/html-dsl") {
             call.respondHtml {
@@ -58,4 +68,38 @@ fun Application.html() {
 
 suspend inline fun ApplicationCall.respondCss(builder: CSSBuilder.() -> Unit) {
     this.respondText(CSSBuilder().apply(builder).toString(), ContentType.Text.CSS)
+}
+
+class Page {
+    val page1: HTML.() -> Unit = {
+        common {
+            title {
+                +"Page 1"
+            }
+        }
+    }
+
+    val page2: HTML.() -> Unit = {
+        common {
+            title {
+                +"Page 2"
+            }
+        }
+    }
+
+    private fun HTML.common(title: HEAD.() -> Unit) {
+        head {
+            script {
+                // some script goes here
+            }
+            title() // injects title
+        }
+        body {
+            div {
+                p {
+                    +"Common part"
+                }
+            }
+        }
+    }
 }
